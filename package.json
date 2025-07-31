@@ -1,0 +1,22 @@
+{
+  "name": "field-starter",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "dingtalk-docs-cool-app start:field",
+    "build": "dingtalk-docs-cool-app pack:field",
+    "pack": "dingtalk-docs-cool-app pack:field",
+    "typecheck": "tsc --noEmit --project tsconfig.json"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@ali/we-addon-sandbox-init": "1.9.8",
+    "@types/node-fetch": "^2.6.12"
+  },
+  "devDependencies": {
+    "typescript": "^4.9.5"
+  },
+  "packageManager": "yarn@1.22.22+sha1.ac34549e6aa8e7ead463a7407e1c7390f61a6610"
+}
