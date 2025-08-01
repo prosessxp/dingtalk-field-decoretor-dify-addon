@@ -75,7 +75,6 @@ fieldDecoratorKit.setDecorator({
         method: 'GET',
       }).then(res => res.json());
       const usdRate = res?.rates?.[target] as number;
-      console.log('res', res);
 
       return {
         code: FieldExecuteCode.Success,
