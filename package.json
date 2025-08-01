@@ -12,7 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@ali/we-addon-sandbox-init": "1.9.8",
+    "dingtalk-docs-cool-app": "0.3.0",
     "@types/node-fetch": "^2.6.12"
   },
   "devDependencies": {
