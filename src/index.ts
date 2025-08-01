@@ -66,7 +66,6 @@ fieldDecoratorKit.setDecorator({
   resultType: {
     type: FieldType.Number,
   },
-  serviceUrl: '',
   // formItemParams 为运行时传入的字段参数，对应字段配置里的 formItems （如引用的依赖字段）
   execute: async (context, formData: { account: number; target: string }) => {
     const { account, target } = formData;
