@@ -1,4 +1,4 @@
-import { FieldType, fieldDecoratorKit, FormItemComponent, FieldExecuteCode } from '@ali/we-addon-sandbox-init';
+import { FieldType, fieldDecoratorKit, FormItemComponent, FieldExecuteCode } from 'dingtalk-docs-cool-app';
 const { t } = fieldDecoratorKit;
 
 // 通过addDomainList添加请求接口的域名
