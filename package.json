@@ -12,7 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "dingtalk-docs-cool-app": "0.3.0",
+    "dingtalk-docs-cool-app": "0.3.1",
     "@types/node-fetch": "^2.6.12"
   },
   "devDependencies": {
