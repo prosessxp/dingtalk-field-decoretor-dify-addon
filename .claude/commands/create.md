@@ -22,7 +22,7 @@
 - @knowledges/i18n.md `i18nMap` 是字段模板的国际化配置
 
 ## Code Architecture
-每一种字段模板都在@code/extensions/decorators下面有独立的文件夹，文件夹中主要文件：
+每一种字段模板都需要新建一个独立的文件夹，文件夹中主要文件：
 - `src/index.ts` 包含插件的所有功能。通过 `fieldDecoratorKit` 的相关能力，添加字段模板插件你应该确保代码逻辑都实现在 `src/index.ts` 中
 - `package.json` 是一些依赖的包以及可用的命令，这个每个插件都是一样的，参考@demos/package.json
 - `tsconfig.json` 是一些编译配置，这个每个插件都是一样的，参考@demos/tsconfig.json
