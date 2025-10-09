@@ -1,7 +1,7 @@
 {
   "name": "field-starter",
   "version": "1.0.0",
-  "description": "",
+  "description": "Dify AI字段模板 - 钉钉AI表集成",
   "main": "index.js",
   "scripts": {
     "start": "dingtalk-docs-cool-app start:field",
