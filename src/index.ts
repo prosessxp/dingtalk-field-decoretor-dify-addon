@@ -1,4 +1,4 @@
-import { FieldType, fieldDecoratorKit, FormItemComponent, FieldExecuteCode } from 'dingtalk-docs-cool-app';
+import { FieldType, fieldDecoratorKit, FormItemComponent, FieldExecuteCode, AuthorizationType } from 'dingtalk-docs-cool-app';
 const { t } = fieldDecoratorKit;
 
 // 通过addDomainList添加请求接口的域名 - 添加 Dify API 域名
@@ -6,6 +6,20 @@ fieldDecoratorKit.setDomainList(['dify.newki.com', 'api.dify.ai', 'cloud.dify.ai
 
 fieldDecoratorKit.setDecorator({
   name: 'Dify 智能体',
+  // 配置授权
+  authorizations: {
+    id: 'dify_auth',
+    platform: 'Dify',
+    type: AuthorizationType.HeaderBearerToken,
+    required: true,
+    instructionsUrl: "https://docs.dify.ai/zh-hans/guides/application-publishing/developing-with-apis",
+    label: 'Dify API Key',
+    tooltips: '请在 Dify 应用设置中获取 API Key',
+    icon: {
+      light: 'https://assets-docs.dify.ai/2025/05/d05cfc6ebe48f725d171dc71c64a5d16.svg',
+      dark: 'https://assets-docs.dify.ai/2025/05/c51f1cda47c1d9a4a162d7736f6e4c53.svg'
+    }
+  },
   // 定义国际化语言资源
   i18nMap: {
     'zh-CN': {
@@ -13,8 +27,6 @@ fieldDecoratorKit.setDecorator({
       'questionPlaceholder': '请输入要向 AI 提问的内容（工作流模式时留空，使用【输入参数配置】）',
       'attachmentField': '附件字段（可选）',
       'attachmentFieldPlaceholder': '选择一个附件字段作为输入',
-      'apiKey': 'Dify API Key',
-      'apiKeyPlaceholder': '请输入 Dify API Key，可在应用设置中获取',
       'apiBaseUrl': 'Dify API 地址',
       'apiBaseUrlPlaceholder': '请输入 Dify API 基础地址，如：https://api.dify.ai/v1',
       'inputParams': '输入参数配置（可选）',
@@ -29,8 +41,8 @@ fieldDecoratorKit.setDecorator({
       'errorChatQuestionRequired': '对话流模式下问题/提示为必填项',
       'errorWorkflowOutputRequired': '工作流模式下工作流结果变量为必填项',
       'errorInvalidApiUrl': '必须使用Dify官方地址，如：https://api.dify.ai/v1',
-      'errorDifyApiRequest': 'Dify API 请求失败',
-      'errorOutputVariableNotFound': '未能在 outputs 中找到指定的变量',
+      'errorDifyApiRequest': 'Dify API 请求失败，请核对地址及Key并检查Dify日志',
+      'errorOutputVariableNotFound': '未能在Dify输出中找到指定的变量',
       'errorExecuteFailed': '执行错误'
     },
     'en-US': {
@@ -38,8 +50,6 @@ fieldDecoratorKit.setDecorator({
       'questionPlaceholder': 'Enter your question for AI (Optional for work flow mode, use input parameters)',
       'attachmentField': 'Attachment Field (Optional)',
       'attachmentFieldPlaceholder': 'Select an attachment field as input',
-      'apiKey': 'Dify API Key',
-      'apiKeyPlaceholder': 'Enter your Dify API Key from app settings',
       'apiBaseUrl': 'Dify API Base URL',
       'apiBaseUrlPlaceholder': 'Enter Dify API base URL, e.g.: https://api.dify.ai/v1',
       'inputParams': 'Input Parameters Configuration (Optional)',
@@ -54,8 +64,8 @@ fieldDecoratorKit.setDecorator({
       'errorChatQuestionRequired': 'Question/Prompt is required in chat flow mode',
       'errorWorkflowOutputRequired': 'Workflow output variable is required in work flow mode',
       'errorInvalidApiUrl': 'Must use official Dify address, e.g.: https://api.dify.ai/v1',
-      'errorDifyApiRequest': 'Dify API request failed',
-      'errorOutputVariableNotFound': 'Could not find the specified variable in outputs',
+      'errorDifyApiRequest': 'Dify API request failed, please check the address and Key and check the Dify log',
+      'errorOutputVariableNotFound': 'Could not find the specified variable in Dify outputs',
       'errorExecuteFailed': 'Execute error'
     },
     'ja-JP': {
@@ -63,8 +73,6 @@ fieldDecoratorKit.setDecorator({
       'questionPlaceholder': 'AIに質問する内容を入力（ワークフローモードではオプション、inputsパラメータを使用）',
       'attachmentField': '添付フィールド（オプション）',
       'attachmentFieldPlaceholder': '入力として添付フィールドを選択',
-      'apiKey': 'Dify API Key',
-      'apiKeyPlaceholder': 'アプリ設定からDify API Keyを入力してください',
       'apiBaseUrl': 'Dify API ベースURL',
       'apiBaseUrlPlaceholder': 'Dify APIベースURLを入力してください、例：https://api.dify.ai/v1',
       'inputParams': '入力パラメータ設定（オプション）',
@@ -79,10 +87,18 @@ fieldDecoratorKit.setDecorator({
       'errorChatQuestionRequired': 'チャットフローモードでは質問/プロンプトが必須です',
       'errorWorkflowOutputRequired': 'ワークフローモードでは結果変数が必須です',
       'errorInvalidApiUrl': 'Dify公式アドレスを使用する必要があります。例：https://api.dify.ai/v1',
-      'errorDifyApiRequest': 'Dify APIリクエストが失敗しました',
-      'errorOutputVariableNotFound': 'outputsで指定された変数が見つかりませんでした',
+      'errorDifyApiRequest': 'Dify APIリクエストが失敗しました。APIキーを確認し、Difyログをチェックしてください',
+      'errorOutputVariableNotFound': ' Difyの結果変数から指定された変数が見つかりませんでした',
       'errorExecuteFailed': '実行エラー'
     },
+  },
+  errorMessages: {
+    'chatQuestionRequired': t('errorChatQuestionRequired'),
+    'workflowOutputRequired': t('errorWorkflowOutputRequired'),
+    'invalidApiUrl': t('errorInvalidApiUrl'),
+    'difApiRequestFailed': t('errorDifyApiRequest'),
+    'outputVariableNotFound': t('errorOutputVariableNotFound'),
+    'executeFailed': t('errorExecuteFailed'),
   },
   // 定义字段模板的入参
   formItems: [
@@ -129,17 +145,6 @@ fieldDecoratorKit.setDecorator({
       },
       validator: {
         required: false,
-      }
-    },
-    {
-      key: 'apiKey',
-      label: t('apiKey'),
-      component: FormItemComponent.Textarea,
-      props: {
-        placeholder: t('apiKeyPlaceholder'),
-      },
-      validator: {
-        required: true,
       }
     },
     {
@@ -198,7 +203,6 @@ fieldDecoratorKit.setDecorator({
     formData: {
       question: string;
       attachmentField?: Array<{name: string; type: string; size: number; tmp_url: string}>;
-      apiKey: string;
       apiBaseUrl: string;
       modelMode: string;
       inputParams?: string;
@@ -217,26 +221,23 @@ fieldDecoratorKit.setDecorator({
       
       if (!isValidDomain && !isLocalhost && !hasHttp) {
         return {
-          code: FieldExecuteCode.ConfigError,
-          msg: '必须使用Dify官方地址，如：https://api.dify.ai/v1 等',
-          data: '',
+          code: FieldExecuteCode.Error,
+          errorMessage: 'invalidApiUrl',
         };
       }
       
       // 根据模式验证必填字段
       if (formData.modelMode === 'chat-flow' && (!formData.question || !formData.question.trim())) {
         return {
-          code: FieldExecuteCode.ConfigError,
-          msg: '对话模式下问题不能为空',
-          data: '',
+          code: FieldExecuteCode.Error,
+          errorMessage: 'chatQuestionRequired',
         };
       }
       
       if (formData.modelMode === 'work-flow' && (!formData.workflowOutput || !formData.workflowOutput.trim())) {
         return {
-          code: FieldExecuteCode.ConfigError,
-          msg: '工作流模式下输出变量名不能为空',
-          data: '',
+          code: FieldExecuteCode.Error,
+          errorMessage: 'workflowOutputRequired',
         };
       }
       
@@ -364,23 +365,21 @@ fieldDecoratorKit.setDecorator({
       console.log(apiUrl);
       console.log(requestBody);
 
-      // 调用 Dify API，手动添加 Authorization header
+      // 调用 Dify API，使用框架授权
       const response = await context.fetch(apiUrl, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${formData.apiKey}`
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify(requestBody)
-      });
+      }, 'dify_auth'); // 使用授权配置
 
       if (!response.ok) {
         const errorText = await response.text();
         console.log(errorText);
         return {
           code: FieldExecuteCode.Error,
-          msg: `Dify API 请求失败: ${response.status} ${errorText}`,
-          data: '',
+          errorMessage: 'difApiRequestFailed',
         };
       }
 
@@ -398,8 +397,7 @@ fieldDecoratorKit.setDecorator({
         } else {
           return {
             code: FieldExecuteCode.Error,
-            msg: `未找到输出变量: ${outputKey}`,
-            data: '',
+            errorMessage: 'workFlowOutputNotFound',
           };
         }
       }
