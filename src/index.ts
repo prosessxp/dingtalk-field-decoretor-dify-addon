@@ -2,7 +2,7 @@ import { FieldType, fieldDecoratorKit, FormItemComponent, FieldExecuteCode, Auth
 const { t } = fieldDecoratorKit;
 
 // 通过addDomainList添加请求接口的域名 - 添加 Dify API 域名
-fieldDecoratorKit.setDomainList(['dify.newki.com', 'api.dify.ai', 'cloud.dify.ai', 'dify.fillwant.com']);
+fieldDecoratorKit.setDomainList(['dify.newki.com', 'api.dify.ai', 'cloud.dify.ai',"ai.fillwant.com"]);
 
 fieldDecoratorKit.setDecorator({
   name: 'Dify 智能体',
@@ -212,7 +212,7 @@ fieldDecoratorKit.setDecorator({
   ) => {
     try {
       // 验证 API URL 是否符合要求
-      const allowedDomains = ['dify.newki.com', 'api.dify.ai', 'cloud.dify.ai', 'dify.fillwant.com'];
+      const allowedDomains = ['dify.newki.com', 'api.dify.ai', 'cloud.dify.ai', 'ai.fillwant.com'];
       const isLocalhost = formData.apiBaseUrl.includes('192.168.4.51');
       const hasHttp = formData.apiBaseUrl.startsWith('http://') || formData.apiBaseUrl.startsWith('https://');
       
@@ -361,7 +361,7 @@ fieldDecoratorKit.setDecorator({
       }
       
       // Url组装，含调试地址重写
-      const apiUrl = `${formData.apiBaseUrl.replace(/\/$/, '').replace('192.168.4.51','dify.fillwant.com')}${apiPath}`;
+      const apiUrl = `${formData.apiBaseUrl.replace(/\/$/, '').replace('192.168.4.51','ai.fillwant.com')}${apiPath}`;
       console.log(apiUrl);
       console.log(requestBody);
 
