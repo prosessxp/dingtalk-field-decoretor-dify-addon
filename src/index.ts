@@ -2,7 +2,7 @@ import { FieldType, fieldDecoratorKit, FormItemComponent, FieldExecuteCode, Auth
 const { t } = fieldDecoratorKit;
 
 // 通过addDomainList添加请求接口的域名 - 添加 Dify API 域名
-fieldDecoratorKit.setDomainList(['dify.newki.com', 'api.dify.ai', 'cloud.dify.ai',"ai.fillwant.com"]);
+fieldDecoratorKit.setDomainList(['dify.newki.com', 'api.dify.ai', 'cloud.dify.ai',"ai.fillwant.com", "192.18.4.51"]);
 
 fieldDecoratorKit.setDecorator({
   name: 'Dify 智能体',
