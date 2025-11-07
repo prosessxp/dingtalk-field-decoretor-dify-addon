@@ -296,7 +296,58 @@ fieldDecoratorKit.setDecorator({
       // 处理输入参数配置
       if (formData.inputParams && formData.inputParams.trim()) {
         try {
-          const params = JSON.parse(formData.inputParams);
+          // 预处理：将实际换行符转义为 \n，确保 JSON 格式正确
+          let normalizedInput = formData.inputParams
+            .replace(/\r\n/g, '\n')  // 统一换行符（Windows）
+            .replace(/\r/g, '\n');     // 统一换行符（Mac）
+          
+          // 处理 JSON 字符串内的换行：将未转义的换行符转义
+          // 更健壮的处理：逐字符解析，正确处理已转义的字符
+          let result = '';
+          let inString = false;
+          let escape = false;
+          
+          for (let i = 0; i < normalizedInput.length; i++) {
+            const char = normalizedInput[i];
+            
+            if (escape) {
+              // 上一个字符是反斜杠，当前字符被转义
+              result += char;
+              escape = false;
+              continue;
+            }
+            
+            if (char === '\\') {
+              // 反斜杠，可能是转义字符
+              result += char;
+              escape = true;
+              continue;
+            }
+            
+            if (char === '"') {
+              // 引号，切换字符串状态
+              result += char;
+              inString = !inString;
+              continue;
+            }
+            
+            if (inString && char === '\n') {
+              // 在字符串内遇到实际换行符，转义为 \n
+              result += '\\n';
+              continue;
+            }
+            
+            // 其他字符直接添加
+            result += char;
+          }
+          
+          normalizedInput = result;
+          
+          // 添加调试日志
+          console.log('[inputParams] Original:', formData.inputParams);
+          console.log('[inputParams] Normalized:', normalizedInput);
+          
+          const params = JSON.parse(normalizedInput);
           if (typeof params === 'object' && params !== null) {
             // 处理每个参数
             for (const [key, value] of Object.entries(params)) {
@@ -338,7 +389,12 @@ fieldDecoratorKit.setDecorator({
             }
           }
         } catch (error) {
-          console.warn('Parse inputParams JSON fail:', error);
+          console.error('Parse inputParams JSON fail:', error);
+          return {
+            code: FieldExecuteCode.Error,
+            msg: `输入参数JSON格式错误: ${error instanceof Error ? error.message : String(error)}`,
+            data: '',
+          };
         }
       }
       
