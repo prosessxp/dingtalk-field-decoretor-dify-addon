@@ -12,7 +12,7 @@ fieldDecoratorKit.setDecorator({
     platform: 'Dify',
     type: AuthorizationType.HeaderBearerToken,
     required: true,
-    instructionsUrl: "https://docs.dify.ai/cn/use-dify/publish/developing-with-apis",
+    instructionsUrl: "https://docs.dify.ai/zh/use-dify/publish/developing-with-apis",
     label: 'Dify API Key',
     tooltips: '请在 Dify 应用设置中获取 API Key',
     icon: {
