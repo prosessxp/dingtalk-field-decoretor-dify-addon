@@ -2,7 +2,7 @@ import { FieldType, fieldDecoratorKit, FormItemComponent, FieldExecuteCode, Auth
 const { t } = fieldDecoratorKit;
 
 // 通过addDomainList添加请求接口的域名 - 添加 Dify API 域名
-fieldDecoratorKit.setDomainList(['dify.newki.com', 'api.dify.ai', 'cloud.dify.ai','ai.fillwant.com', '192.18.4.51', 'alibaba-inc.com', 'aip.ciwork.cn', 'erp.amz-marketing.com', '115.190.241.165', 'dify.mobvista.com']);
+fieldDecoratorKit.setDomainList(['dify.newki.com', 'api.dify.ai', 'cloud.dify.ai','ai.fillwant.com', '192.168.4.51', 'alibaba-inc.com', 'aip.ciwork.cn', 'erp.amz-marketing.com', '115.190.241.165', 'dify.mobvista.com']);
 
 fieldDecoratorKit.setDecorator({
   name: 'Dify 智能体',
@@ -25,7 +25,9 @@ fieldDecoratorKit.setDecorator({
     'zh-CN': {
       'question': '问题/提示（对话流模式时必填）',
       'questionPlaceholder': '请输入要向 AI 提问的内容（工作流模式时留空，使用【输入参数配置】）',
-      'attachmentField': '附件字段（可选）',
+      'filesParameter': 'Dify文件入参变量名（可选）',
+      'filesParameterPlaceholder': '请输入Dify端文件输入变量名(仅支持文件列表)，配合[附件来源]使用。留空则以Dify默认变量userinput.files作为参数',
+      'attachmentField': '附件来源（可选）',
       'attachmentFieldPlaceholder': '选择一个附件字段作为输入',
       'apiBaseUrl': 'Dify API 地址',
       'apiBaseUrlPlaceholder': '请输入 Dify API 基础地址，如：https://api.dify.ai/v1',
@@ -48,6 +50,8 @@ fieldDecoratorKit.setDecorator({
     'en-US': {
       'question': 'Question/Prompt (Required for chat flow mode)',
       'questionPlaceholder': 'Enter your question for AI (Optional for work flow mode, use input parameters)',
+      'filesParameter': 'Dify File Parameter Name (Optional)',
+      'filesParameterPlaceholder': 'Enter Dify file input variable name (file list limit), use with [Attachment Field]. Leave empty to use Dify default variable userinput.files as parameter',
       'attachmentField': 'Attachment Field (Optional)',
       'attachmentFieldPlaceholder': 'Select an attachment field as input',
       'apiBaseUrl': 'Dify API Base URL',
@@ -71,6 +75,8 @@ fieldDecoratorKit.setDecorator({
     'ja-JP': {
       'question': '質問/プロンプト（チャットモードで必須）',
       'questionPlaceholder': 'AIに質問する内容を入力（ワークフローモードではオプション、inputsパラメータを使用）',
+      'filesParameter': 'Dify ファイル入力変数名（オプション）',
+      'filesParameterPlaceholder': 'Dify ファイル入力変数名を入力してください(ファイルリスト制限)、[添付フィールド]と組み合わせて使用. 空欄でDifyデフォルト変数userinput.filesをパラメータとして使用',
       'attachmentField': '添付フィールド（オプション）',
       'attachmentFieldPlaceholder': '入力として添付フィールドを選択',
       'apiBaseUrl': 'Dify API ベースURL',
@@ -133,6 +139,17 @@ fieldDecoratorKit.setDecorator({
       },
       validator: {
         required: false, // 改为非必填，在执行函数中动态验证
+      }
+    },
+    {
+      key: 'filesParameter',
+      label: t('filesParameter'),
+      component: FormItemComponent.Textarea,
+      props: {
+        placeholder: t('filesParameterPlaceholder'),
+      },
+      validator: {
+        required: false,
       }
     },
     {
@@ -202,6 +219,7 @@ fieldDecoratorKit.setDecorator({
     context,
     formData: {
       question: string;
+      filesParameter?: string;
       attachmentField?: Array<{name: string; type: string; size: number; tmp_url: string}>;
       apiBaseUrl: string;
       modelMode: string;
@@ -249,9 +267,23 @@ fieldDecoratorKit.setDecorator({
       
       // 如果有附件字段，将附件信息添加到 files 数组
       if (formData.attachmentField && formData.attachmentField.length > 0) {
-        formData.attachmentField.forEach(att => {
+        // 处理可能的嵌套数组结构
+        const flatAttachments = Array.isArray(formData.attachmentField[0]) 
+          ? formData.attachmentField.flat() 
+          : formData.attachmentField;
+        
+        flatAttachments.forEach(att => {
+          // 确保 att 是对象且有 name 属性
+          if (!att || typeof att !== 'object' || !att.name) {
+            console.warn('[getFileType] Invalid attachment:', att);
+            return;
+          }
+          
           // 根据文件扩展名判断类型
           const getFileType = (fileName: string): string => {
+            if (!fileName || typeof fileName !== 'string') {
+              return 'custom';
+            }
             const ext = fileName.split('.').pop()?.toLowerCase() || '';
             
             // 图片类型
@@ -400,7 +432,11 @@ fieldDecoratorKit.setDecorator({
       
       // 如果有文件，添加到请求体中
       if (files.length > 0) {
-        requestBody.files = files;
+        if (formData.filesParameter && formData.filesParameter.trim()){
+          requestBody.inputs[formData.filesParameter] = files;
+        } else {
+          requestBody.files = files;
+        }
       }
 
       // 如果有会话ID，添加到请求中
