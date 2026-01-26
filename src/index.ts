@@ -457,8 +457,8 @@ fieldDecoratorKit.setDecorator({
       console.log('请求地址:', apiUrl);
       console.log('请求体:', JSON.stringify(requestBody));
 
-      // 设置 10 分钟超时 (600,000ms)
-      const REQUEST_TIMEOUT = 10 * 60 * 1000;
+      // 设置 5 分钟超时 (300,000ms)
+      const REQUEST_TIMEOUT = 5 * 60 * 1000;
 
       // 调用 Dify API，使用框架授权
       const response = await context.fetch(apiUrl, {
