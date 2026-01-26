@@ -230,7 +230,7 @@ fieldDecoratorKit.setDecorator({
   ) => {
     try {
       // 验证 API URL 是否符合要求
-      const allowedDomains = ['dify.newki.com', 'api.dify.ai', 'cloud.dify.ai', 'ai.fillwant.com',  'alibaba-inc.com', 'aip.ciwork.cn', 'erp.amz-marketing.com', '115.190.241.165', 'dify.mobvista.com'];
+      const allowedDomains = ['dify.newki.com', 'api.dify.ai', 'cloud.dify.ai', 'ai.fillwant.com',  'alibaba-inc.com', 'aip.ciwork.cn', 'erp.amz-marketing.com', '115.190.241.165', 'dify.mobvista.com', '192.168.4.51'];
       const isLocalhost = formData.apiBaseUrl.includes('192.168.4.51');
       const hasHttp = formData.apiBaseUrl.startsWith('http://') || formData.apiBaseUrl.startsWith('https://');
       
@@ -453,9 +453,12 @@ fieldDecoratorKit.setDecorator({
       }
       
       // Url组装，含调试地址重写
-      const apiUrl = `${formData.apiBaseUrl.replace(/\/$/, '').replace('192.168.4.51','ai.fillwant.com')}${apiPath}`;
-      console.log(apiUrl);
-      console.log(requestBody);
+      const apiUrl = `${formData.apiBaseUrl.replace(/\/$/, '')}${apiPath}`;
+      console.log('请求地址:', apiUrl);
+      console.log('请求体:', JSON.stringify(requestBody));
+
+      // 设置 10 分钟超时 (600,000ms)
+      const REQUEST_TIMEOUT = 10 * 60 * 1000;
 
       // 调用 Dify API，使用框架授权
       const response = await context.fetch(apiUrl, {
@@ -463,12 +466,22 @@ fieldDecoratorKit.setDecorator({
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(requestBody)
-      }, 'dify_auth'); // 使用授权配置
+        body: JSON.stringify(requestBody),
+        timeout: REQUEST_TIMEOUT // 核心修改：增加超时时间
+      }, 'dify_auth'); 
 
       if (!response.ok) {
         const errorText = await response.text();
-        console.log(errorText);
+        console.error('Dify API 报错:', errorText);
+        
+        // 如果是 504 或 408，通常是网关超时
+        if (response.status === 504 || response.status === 408) {
+          return {
+            code: FieldExecuteCode.Error,
+            errorMessage: 'apiGatewayTimeout', 
+          };
+        }
+
         return {
           code: FieldExecuteCode.Error,
           errorMessage: 'difApiRequestFailed',
